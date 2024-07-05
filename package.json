@@ -1,15 +1,22 @@
 {
   "name": "instalr",
+  "version": "0.0.1",
   "module": "src/index.ts",
   "type": "module",
+  "bin": {
+    "in": "dist/in"
+  },
   "scripts": {
+    "in": "bun src/index.ts",
+    "build": "bun i && bun build src/index.ts --compile --outfile=dist/in --sourcemap=inline && bun link",
     "lint": "tsc && prettier --check ."
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prettier": "^3.3.2"
-  },
-  "peerDependencies": {
+    "prettier": "^3.3.2",
     "typescript": "^5.0.0"
   }
 }

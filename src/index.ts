@@ -6,13 +6,13 @@ import {
   packageManagerDefs,
   type PackageManagerDefinition,
 } from './package-managers'
-import {printHelp} from './print-help'
+import {help} from './commands'
 
 async function main() {
   const cli = parseCliArgs()
 
   if (cli.help) {
-    printHelp()
+    help()
     process.exit(0)
   }
 

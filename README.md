@@ -1,11 +1,12 @@
 # Easy Install
 
-One command to use the correct package manager to install dependencies for any project (based on the lock file that exists).
+One command to install dependencies with the correct package manager for any JavaScript project.
 
 ## Installation
 
 ```bash
-npm i -g easy-install # creates a global `in` cli command
+# Creates a global `in` cli command
+npm i -g easy-install
 ```
 
 ## Usage
@@ -20,6 +21,21 @@ in [flags] [...<pkg>]
 Flags:
   -D, --dev Install pkg as a dev dependency
 ```
+
+## How it works
+
+Easy Install determines the correct package manager based on the lock file present in the project directory.
+
+`in` can be run from any subdirectory of a project, and it will find the closest lock file relative to where the command is run.
+
+### Supported package managers
+
+| Package Manager | Lock File           |
+| --------------- | ------------------- |
+| npm             | `package-lock.json` |
+| yarn            | `yarn.lock`         |
+| pnpm            | `pnpm-lock.yaml`    |
+| bun             | `bun.lockb`         |
 
 ## Examples
 

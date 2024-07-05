@@ -1,6 +1,8 @@
 import chalk from 'chalk'
+import pkg from '../../package.json'
 
-export function printHelp() {
+export function help() {
+  console.info(pkg.description, '\n')
   console.info(
     `${chalk.bold('Usage:')} ${chalk.bold.green('in')} ${chalk.cyan('[flags]')} [...<pkg>]`,
   )

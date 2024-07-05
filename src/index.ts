@@ -25,11 +25,11 @@ async function main() {
 
   const cli = parseCliArgs()
   if (!cli.dependencies) {
-    await shell(manager.installDeps)
+    await shell(manager.installDepsCmd)
     process.exit(0)
   }
 
-  let cmd = manager.addNewDep
+  let cmd = manager.addNewDepCmd
   if (cli.dev) cmd += ' ' + manager.devDepFlag
   cmd += ' ' + cli.dependencies
   await shell(cmd)

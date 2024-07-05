@@ -1,11 +1,14 @@
 {
-  "name": "instalr",
+  "name": "easy-install",
   "version": "0.0.1",
   "module": "src/index.ts",
   "type": "module",
   "bin": {
     "in": "dist/in"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "in": "bun src/index.ts",
     "build": "bun i && bun build src/index.ts --compile --outfile=dist/in --sourcemap=inline && bun link",

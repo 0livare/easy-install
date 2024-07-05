@@ -1,62 +1,41 @@
 import path from 'node:path'
-import {$} from 'bun'
-import {parseArgs} from 'util'
 import chalk from 'chalk'
+import {parseCliArgs} from './cli'
+import {shell} from './shell'
+import {
+  packageManagerDefs,
+  type PackageManagerDefinition,
+} from './package-managers'
 
-type PackageManager = keyof typeof packageManagerInfos
-const packageManagerInfos = {
-  npm: {
-    lockFileName: 'package-lock.json',
-    installDeps: 'npm install',
-    addNewDep: 'npm install',
-    devDepFlag: '--save-dev',
-  },
-  yarn: {
-    lockFileName: 'yarn.lock',
-    installDeps: 'yarn install',
-    addNewDep: 'yarn add',
-    devDepFlag: '--dev',
-  },
-  pnpm: {
-    lockFileName: 'pnpm-lock.yaml',
-    installDeps: 'pnpm install',
-    addNewDep: 'pnpm add',
-    devDepFlag: '--save-dev',
-  },
-  bun: {
-    lockFileName: 'bun.lockb',
-    installDeps: 'bun install',
-    addNewDep: 'bun add',
-    devDepFlag: '--dev',
-  },
+async function main() {
+  const packageJsonPath = await findClosestPackageJson()
+  if (!packageJsonPath) {
+    console.error(chalk.red('No package.json found'))
+    process.exit(1)
+  }
+
+  const manager = await determinePackageManager(packageJsonPath)
+  if (!manager) {
+    console.error(chalk.red('No lock file found'))
+    process.exit(1)
+  }
+  console.info(
+    chalk.gray(`Installing with ${manager.name}: ${manager.lockFilePath}`),
+  )
+
+  const cli = parseCliArgs()
+  if (!cli.dependencies) {
+    await shell(manager.installDeps)
+    process.exit(0)
+  }
+
+  let cmd = manager.addNewDep
+  if (cli.dev) cmd += ' ' + manager.devDepFlag
+  cmd += ' ' + cli.dependencies
+  await shell(cmd)
 }
 
-const packageJsonPath = await findClosestPackageJson()
-if (!packageJsonPath) {
-  console.error(chalk.red('No package.json found'))
-  process.exit(1)
-}
-
-const manager = await determinePackageManager(packageJsonPath)
-if (!manager) {
-  console.error(chalk.red('No lock file found'))
-  process.exit(1)
-}
-const {packageManagerName, lockFilePath} = manager
-console.info(
-  chalk.gray(`Installing with ${packageManagerName}: ${lockFilePath}`),
-)
-
-const cli = parseCliArgs()
-if (!cli.dependencies) {
-  await shell(packageManagerInfos[packageManagerName].installDeps)
-  process.exit(0)
-}
-
-let cmd = packageManagerInfos[packageManagerName].addNewDep
-if (cli.dev) cmd += ' ' + packageManagerInfos[packageManagerName].devDepFlag
-cmd += ' ' + cli.dependencies
-await shell(cmd)
+await main()
 
 //
 // Helper Functions
@@ -74,49 +53,17 @@ async function findClosestPackageJson(): Promise<string | undefined> {
   }
 }
 
-async function determinePackageManager(packageJsonPath: string) {
-  for (const _name in packageManagerInfos) {
-    const managerName = _name as PackageManager
-    const {lockFileName} = packageManagerInfos[managerName]
-    const lockFilePath = path.join(path.dirname(packageJsonPath), lockFileName)
+async function determinePackageManager(
+  packageJsonPath: string,
+): Promise<(PackageManagerDefinition & {lockFilePath: string}) | undefined> {
+  for (const manager of packageManagerDefs) {
+    const lockFilePath = path.join(
+      path.dirname(packageJsonPath),
+      manager.lockFileName,
+    )
 
     if (await Bun.file(lockFilePath).exists()) {
-      return {packageManagerName: managerName, lockFilePath}
+      return {...manager, lockFilePath}
     }
   }
-}
-
-function parseCliArgs() {
-  let args
-  try {
-    args = parseArgs({
-      args: Bun.argv,
-      options: {
-        dependencies: {type: 'string'},
-        dev: {type: 'boolean', short: 'D'},
-      },
-      strict: true,
-      allowPositionals: true,
-    })
-  } catch (e: any) {
-    console.error(chalk.red(e.message))
-    process.exit(1)
-  }
-
-  const positionals = args.positionals.slice(2)
-  if (positionals.length > 0 && !args.values.dependencies) {
-    args.values.dependencies = positionals.join(' ')
-  }
-
-  return args.values
-}
-
-async function shell(cmd: string) {
-  console.info(chalk.gray(`$ ${cmd}`))
-
-  const fakeLiteral = [cmd] as unknown as TemplateStringsArray
-  // @ts-expect-error
-  fakeLiteral.raw = [cmd]
-
-  return await $(fakeLiteral, [])
 }

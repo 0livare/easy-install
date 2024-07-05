@@ -3,6 +3,7 @@ import {$} from 'bun'
 import {parseArgs} from 'util'
 import chalk from 'chalk'
 
+type PackageManager = keyof typeof packageManagerInfos
 const packageManagerInfos = {
   npm: {
     lockFileName: 'package-lock.json',
@@ -29,7 +30,6 @@ const packageManagerInfos = {
     devDepFlag: '--dev',
   },
 }
-type PackageManager = keyof typeof packageManagerInfos
 
 const packageJsonPath = await findClosestPackageJson()
 if (!packageJsonPath) {
@@ -113,5 +113,10 @@ function parseCliArgs() {
 
 async function shell(cmd: string) {
   console.info(chalk.gray(`$ ${cmd}`))
-  return await $`${cmd}`
+
+  const fakeLiteral = [cmd] as unknown as TemplateStringsArray
+  // @ts-expect-error
+  fakeLiteral.raw = [cmd]
+
+  return await $(fakeLiteral, [])
 }

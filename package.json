@@ -1,18 +1,17 @@
 {
   "name": "easy-install",
   "version": "0.0.1",
-  "module": "src/index.ts",
-  "type": "module",
   "bin": {
-    "in": "dist/in"
+    "in": "bin/in"
   },
   "files": [
-    "dist"
+    "bin"
   ],
   "scripts": {
     "in": "bun src/index.ts",
-    "build": "bun build src/index.ts --compile --outfile=dist/in --sourcemap=inline && bun link",
-    "watch": "bun build src/index.ts --compile --outfile=dist/in --sourcemap=inline --watch",
+    "build": "bun build src/index.ts --compile --outfile=bin/in --sourcemap=inline",
+    "postbuild": "bun link",
+    "watch": "bun run build --watch",
     "lint": "tsc && prettier --check ."
   },
   "dependencies": {

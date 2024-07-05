@@ -6,8 +6,16 @@ import {
   packageManagerDefs,
   type PackageManagerDefinition,
 } from './package-managers'
+import {printHelp} from './print-help'
 
 async function main() {
+  const cli = parseCliArgs()
+
+  if (cli.help) {
+    printHelp()
+    process.exit(0)
+  }
+
   const packageJsonPath = await findClosestPackageJson()
   if (!packageJsonPath) {
     console.error(chalk.red('No package.json found'))
@@ -23,7 +31,6 @@ async function main() {
     chalk.gray(`Installing with ${manager.name}: ${manager.lockFilePath}`),
   )
 
-  const cli = parseCliArgs()
   if (!cli.dependencies) {
     await shell(manager.installDepsCmd)
     process.exit(0)

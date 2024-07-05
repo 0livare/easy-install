@@ -9,6 +9,7 @@ export function parseCliArgs() {
       options: {
         dependencies: {type: 'string'},
         dev: {type: 'boolean', short: 'D'},
+        help: {type: 'boolean', short: 'h'},
       },
       strict: true,
       allowPositionals: true,

@@ -1,14 +1,35 @@
 import path from 'node:path'
 import {$} from 'bun'
+import {parseArgs} from 'util'
 import chalk from 'chalk'
 
-const packageManagers = {
-  npm: {lockFileName: 'package-lock.json', installCommand: 'npm install'},
-  yarn: {lockFileName: 'yarn.lock', installCommand: 'yarn install'},
-  pnpm: {lockFileName: 'pnpm-lock.yaml', installCommand: 'pnpm install'},
-  bun: {lockFileName: 'bun.lockb', installCommand: 'bun install'},
+const packageManagerInfos = {
+  npm: {
+    lockFileName: 'package-lock.json',
+    installDeps: 'npm install',
+    addNewDep: 'npm install',
+    devDepFlag: '--save-dev',
+  },
+  yarn: {
+    lockFileName: 'yarn.lock',
+    installDeps: 'yarn install',
+    addNewDep: 'yarn add',
+    devDepFlag: '--dev',
+  },
+  pnpm: {
+    lockFileName: 'pnpm-lock.yaml',
+    installDeps: 'pnpm install',
+    addNewDep: 'pnpm add',
+    devDepFlag: '--save-dev',
+  },
+  bun: {
+    lockFileName: 'bun.lockb',
+    installDeps: 'bun install',
+    addNewDep: 'bun add',
+    devDepFlag: '--dev',
+  },
 }
-type PackageManager = keyof typeof packageManagers
+type PackageManager = keyof typeof packageManagerInfos
 
 const packageJsonPath = await findClosestPackageJson()
 if (!packageJsonPath) {
@@ -16,15 +37,26 @@ if (!packageJsonPath) {
   process.exit(1)
 }
 
-const packageManagerName = await determinePackageManager(packageJsonPath)
-if (!packageManagerName) {
+const manager = await determinePackageManager(packageJsonPath)
+if (!manager) {
   console.error(chalk.red('No lock file found'))
   process.exit(1)
 }
+const {packageManagerName, lockFilePath} = manager
+console.info(
+  chalk.gray(`Installing with ${packageManagerName}: ${lockFilePath}`),
+)
 
-const manager = packageManagers[packageManagerName]
-console.info(chalk.gray(`$ ${manager.installCommand}`))
-await $`${manager.installCommand}`
+const cli = parseCliArgs()
+if (!cli.dependencies) {
+  await shell(packageManagerInfos[packageManagerName].installDeps)
+  process.exit(0)
+}
+
+let cmd = packageManagerInfos[packageManagerName].addNewDep
+if (cli.dev) cmd += ' ' + packageManagerInfos[packageManagerName].devDepFlag
+cmd += ' ' + cli.dependencies
+await shell(cmd)
 
 //
 // Helper Functions
@@ -42,17 +74,44 @@ async function findClosestPackageJson(): Promise<string | undefined> {
   }
 }
 
-async function determinePackageManager(
-  packageJsonPath: string,
-): Promise<PackageManager | undefined> {
-  for (const _name in packageManagers) {
+async function determinePackageManager(packageJsonPath: string) {
+  for (const _name in packageManagerInfos) {
     const managerName = _name as PackageManager
-    const {lockFileName} = packageManagers[managerName]
+    const {lockFileName} = packageManagerInfos[managerName]
     const lockFilePath = path.join(path.dirname(packageJsonPath), lockFileName)
 
     if (await Bun.file(lockFilePath).exists()) {
-      console.info(chalk.gray(`Found lock file ${lockFilePath}`))
-      return managerName
+      return {packageManagerName: managerName, lockFilePath}
     }
   }
+}
+
+function parseCliArgs() {
+  let args
+  try {
+    args = parseArgs({
+      args: Bun.argv,
+      options: {
+        dependencies: {type: 'string'},
+        dev: {type: 'boolean', short: 'D'},
+      },
+      strict: true,
+      allowPositionals: true,
+    })
+  } catch (e: any) {
+    console.error(chalk.red(e.message))
+    process.exit(1)
+  }
+
+  const positionals = args.positionals.slice(2)
+  if (positionals.length > 0 && !args.values.dependencies) {
+    args.values.dependencies = positionals.join(' ')
+  }
+
+  return args.values
+}
+
+async function shell(cmd: string) {
+  console.info(chalk.gray(`$ ${cmd}`))
+  return await $`${cmd}`
 }

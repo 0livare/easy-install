@@ -2,8 +2,12 @@
   "name": "instalr",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "lint": "tsc && prettier --check ."
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "^3.3.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

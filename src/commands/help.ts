@@ -11,13 +11,13 @@ export function help() {
   // Flags
   console.info(`\n${chalk.bold('Flags:')}`)
   console.info(
-    `  ${chalk.cyan('-D')}, ${chalk.cyan('--dev')} \t Install pkg as a development dependency`,
+    `  ${chalk.cyan('-d')}, ${chalk.cyan('-D')}, ${chalk.cyan('--dev')}, ${chalk.cyan('--save-dev')}  Install pkg as a development dependency`,
   )
   console.info(
-    `  ${chalk.cyan('-v')}, ${chalk.cyan('--version')}  Print version number`,
+    `  ${chalk.cyan('-v')}, ${chalk.cyan('--version')}              Print version number`,
   )
   console.info(
-    `  ${chalk.cyan('-h')}, ${chalk.cyan('--help')} \t Print help information`,
+    `  ${chalk.cyan('-h')}, ${chalk.cyan('--help')}                 Print help information`,
   )
 
   // Examples

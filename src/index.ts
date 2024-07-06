@@ -41,7 +41,7 @@ async function main() {
   }
 
   let cmd = manager.addNewDepCmd
-  if (cli.dev) cmd += ' ' + manager.devDepFlag
+  if (cli.dev || cli['save-dev']) cmd += ' ' + manager.devDepFlag
   cmd += ' ' + cli.dependencies
   await shell(cmd)
 }

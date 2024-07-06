@@ -19,9 +19,9 @@ in [flags] [...<pkg>]
 
 ```bash
 Flags:
-  -D, --dev     Install pkg as a development dependency
-  -v, --version Print version number
-  -h, --help    Print help information
+  -d, -D, --dev, --save-dev  Install pkg as a development dependency
+  -v, --version              Print version number
+  -h, --help                 Print help information
 ```
 
 ## Examples

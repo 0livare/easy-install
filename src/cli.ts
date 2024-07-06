@@ -8,7 +8,8 @@ export function parseCliArgs() {
       args: Bun.argv,
       options: {
         dependencies: {type: 'string'},
-        dev: {type: 'boolean', short: 'D'},
+        dev: {type: 'boolean', short: 'd'},
+        'save-dev': {type: 'boolean', short: 'D'},
         help: {type: 'boolean', short: 'h'},
         version: {type: 'boolean', short: 'v'},
       },
@@ -22,7 +23,7 @@ export function parseCliArgs() {
 
   const positionals = args.positionals.slice(2)
   if (positionals.length > 0 && !args.values.dependencies) {
-    args.values.dependencies = positionals.join(' ')
+    args.values.dependencies = positionals.map((p) => p.trim()).join(' ')
   }
 
   return args.values

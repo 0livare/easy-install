@@ -6,13 +6,17 @@ import {
   packageManagerDefs,
   type PackageManagerDefinition,
 } from './package-managers'
-import {help} from './commands'
+import {help, version} from './commands'
 
 async function main() {
   const cli = parseCliArgs()
 
   if (cli.help) {
     help()
+    process.exit(0)
+  }
+  if (cli.version) {
+    version()
     process.exit(0)
   }
 

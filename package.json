@@ -1,7 +1,7 @@
 {
   "name": "easy-install",
   "version": "0.0.3",
-  "description": "One command to install dependencies with the correct package manager for any JavaScript project.",
+  "description": "Single command to install dependencies with the correct package manager for any JavaScript project.",
   "bin": {
     "in": "bin/in"
   },

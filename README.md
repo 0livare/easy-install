@@ -1,6 +1,6 @@
 # Easy Install
 
-One command to install dependencies with the correct package manager for any JavaScript project.
+Single command to install dependencies with the correct package manager for any JavaScript project.
 
 ## Installation
 
@@ -19,23 +19,10 @@ in [flags] [...<pkg>]
 
 ```bash
 Flags:
-  -D, --dev Install pkg as a dev dependency
+  -D, --dev     Install pkg as a development dependency
+  -v, --version Print version number
+  -h, --help    Print help information
 ```
-
-## How it works
-
-Easy Install determines the correct package manager based on the lock file present in the project directory.
-
-`in` can be run from any subdirectory of a project, and it will find the closest lock file relative to where the command is run.
-
-### Supported package managers
-
-| Package Manager | Lock File           |
-| --------------- | ------------------- |
-| npm             | `package-lock.json` |
-| yarn            | `yarn.lock`         |
-| pnpm            | `pnpm-lock.yaml`    |
-| bun             | `bun.lockb`         |
 
 ## Examples
 
@@ -59,7 +46,7 @@ in express
 # or: bun add express
 ```
 
-### Add a project DEV dependency
+### Add a project development dependency
 
 ```bash
 in --dev nodemon
@@ -69,9 +56,24 @@ in --dev nodemon
 # or: bun add --dev nodemon
 ```
 
+## How it works
+
+Easy Install determines the correct package manager based on the lock file present in the project directory.
+
+`in` can be run from any subdirectory of a project, and it will find the closest lock file in any parent directory relative to where the command is run.
+
+### Supported package managers
+
+| Package Manager | Lock File           |
+| --------------- | ------------------- |
+| npm             | `package-lock.json` |
+| yarn            | `yarn.lock`         |
+| pnpm            | `pnpm-lock.yaml`    |
+| bun             | `bun.lockb`         |
+
 ## Development
 
-> You must have [Bun](https://bun.sh/docs/installation) installed globally.
+> You must have [Bun](https://bun.sh/docs/installation) installed globally to run this project in dev mode.
 
 To install dependencies:
 
@@ -82,7 +84,7 @@ bun install
 To run:
 
 ```bash
-bun run in
+bun in
 ```
 
 To build a binary:

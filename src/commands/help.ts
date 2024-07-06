@@ -2,14 +2,25 @@ import chalk from 'chalk'
 import pkg from '../../package.json'
 
 export function help() {
-  console.info(pkg.description, '\n')
+  console.info('\n' + pkg.description + '\n')
+
   console.info(
     `${chalk.bold('Usage:')} ${chalk.bold.green('in')} ${chalk.cyan('[flags]')} [...<pkg>]`,
   )
+
+  // Flags
   console.info(`\n${chalk.bold('Flags:')}`)
   console.info(
-    `  ${chalk.cyan('-D')}, ${chalk.cyan('--dev')} \t Install pkg as a dev dependency`,
+    `  ${chalk.cyan('-D')}, ${chalk.cyan('--dev')} \t Install pkg as a development dependency`,
   )
+  console.info(
+    `  ${chalk.cyan('-v')}, ${chalk.cyan('--version')}  Print version number`,
+  )
+  console.info(
+    `  ${chalk.cyan('-h')}, ${chalk.cyan('--help')} \t Print help information`,
+  )
+
+  // Examples
   console.info(`\n${chalk.bold('Examples:')}`)
   console.info(
     chalk.bold.green('  in'),
@@ -24,6 +35,6 @@ export function help() {
   console.info(
     chalk.bold.green('  in --dev nodemon'),
     ' ',
-    chalk.gray('Add a project DEV dependency'),
+    chalk.gray('Add a project development dependency'),
   )
 }

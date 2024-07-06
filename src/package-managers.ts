@@ -1,36 +1,40 @@
-export type PackageManagerName = 'npm' | 'yarn' | 'pnpm' | 'bun'
+import {objectKeys} from './utils'
 
-export const packageManagerDefs: PackageManagerDefinition[] = [
-  {
-    name: 'npm',
+const packageManagerDefs = {
+  npm: {
     lockFileName: 'package-lock.json',
     installDepsCmd: 'npm install',
     addNewDepCmd: 'npm install',
     devDepFlag: '--save-dev',
   },
-  {
-    name: 'yarn',
+  yarn: {
     lockFileName: 'yarn.lock',
     installDepsCmd: 'yarn install',
     addNewDepCmd: 'yarn add',
     devDepFlag: '--dev',
   },
-  {
-    name: 'pnpm',
+  pnpm: {
     lockFileName: 'pnpm-lock.yaml',
     installDepsCmd: 'pnpm install',
     addNewDepCmd: 'pnpm add',
     devDepFlag: '--save-dev',
   },
-  {
-    name: 'bun',
+  bun: {
     lockFileName: 'bun.lockb',
     installDepsCmd: 'bun install',
     addNewDepCmd: 'bun add',
     devDepFlag: '--dev',
   },
-]
+} satisfies Record<string, Omit<PackageManagerDefinition, 'name'>>
 
+export const packageManagerDefList: PackageManagerDefinition[] = objectKeys(
+  packageManagerDefs,
+).map((managerName) => ({
+  name: managerName,
+  ...packageManagerDefs[managerName],
+}))
+
+export type PackageManagerName = keyof typeof packageManagerDefs
 export type PackageManagerDefinition = {
   name: PackageManagerName
   lockFileName: string

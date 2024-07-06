@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import {parseCliArgs} from './cli'
 import {shell} from './shell'
 import {
-  packageManagerDefs,
+  packageManagerDefList,
   type PackageManagerDefinition,
 } from './package-managers'
 import {help, version} from './commands'
@@ -67,7 +67,7 @@ async function findClosestPackageJson(): Promise<string | undefined> {
 async function determinePackageManager(
   packageJsonPath: string,
 ): Promise<(PackageManagerDefinition & {lockFilePath: string}) | undefined> {
-  for (const manager of packageManagerDefs) {
+  for (const manager of packageManagerDefList) {
     const lockFilePath = path.join(
       path.dirname(packageJsonPath),
       manager.lockFileName,

@@ -56,6 +56,12 @@ in --dev nodemon
 # or: bun add --dev nodemon
 ```
 
+### Add multiple project dependencies at once
+
+```bash
+in react immer axios
+```
+
 ## How it works
 
 Easy Install determines the correct package manager based on the lock file present in the project directory.

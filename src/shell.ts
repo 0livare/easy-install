@@ -15,5 +15,5 @@ export async function shell(cmd: string) {
   // @ts-expect-error
   fakeLiteral.raw = [cmd]
 
-  return await $(fakeLiteral, [])
+  return await $(fakeLiteral, []).cwd(process.cwd())
 }

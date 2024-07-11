@@ -20,17 +20,12 @@ async function main() {
     process.exit(0)
   }
 
-  const packageJsonPath = await findClosestPackageJson()
-  if (!packageJsonPath) {
-    console.error(chalk.red('No package.json found'))
-    process.exit(1)
-  }
-
-  const manager = await determinePackageManager(packageJsonPath)
+  const manager = await findClosestLockFile()
   if (!manager) {
     console.error(chalk.red('No lock file found'))
     process.exit(1)
   }
+
   console.info(
     chalk.gray(`Installing with ${manager.name}: ${manager.lockFilePath}`),
   )
@@ -52,11 +47,16 @@ await main()
 // Helper Functions
 //
 
-async function findClosestPackageJson(): Promise<string | undefined> {
+type ManagerWithLockFile = PackageManagerDefinition & {lockFilePath: string}
+
+async function findClosestLockFile(): Promise<ManagerWithLockFile | undefined> {
   let current = process.cwd()
   while (true) {
     const packageJsonPath = path.join(current, 'package.json')
-    if (await Bun.file(packageJsonPath).exists()) return packageJsonPath
+    if (await Bun.file(packageJsonPath).exists()) {
+      const manager = await determinePackageManager(packageJsonPath)
+      if (manager) return manager
+    }
 
     const parent = path.dirname(current)
     if (parent === current) break
@@ -66,7 +66,7 @@ async function findClosestPackageJson(): Promise<string | undefined> {
 
 async function determinePackageManager(
   packageJsonPath: string,
-): Promise<(PackageManagerDefinition & {lockFilePath: string}) | undefined> {
+): Promise<ManagerWithLockFile | undefined> {
   for (const manager of packageManagerDefList) {
     const lockFilePath = path.join(
       path.dirname(packageJsonPath),

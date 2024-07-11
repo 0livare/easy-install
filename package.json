@@ -1,6 +1,6 @@
 {
   "name": "easy-install",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Single command to install dependencies with the correct package manager for any JavaScript project.",
   "author": "Zach Olivare <https://github.com/0livare>",
   "license": "ISC",

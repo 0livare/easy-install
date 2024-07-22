@@ -5,6 +5,9 @@ Single command to install dependencies with the correct package manager for any 
 ## Installation
 
 ```bash
+# easy-install depends on bun being installed globally
+npm i -g bun
+
 # Creates a global `in` cli command
 npm i -g easy-install
 ```
@@ -79,7 +82,7 @@ Easy Install determines the correct package manager based on the lock file prese
 
 ## Development
 
-> You must have [Bun](https://bun.sh/docs/installation) installed globally to run this project in dev mode.
+> You must have [Bun](https://bun.sh/docs/installation) installed globally.
 
 To install dependencies:
 

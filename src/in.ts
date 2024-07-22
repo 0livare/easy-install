@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import path from 'node:path'
 import chalk from 'chalk'
 import {parseCliArgs} from './cli'

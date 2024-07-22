@@ -1,21 +1,19 @@
 {
   "name": "easy-install",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Single command to install dependencies with the correct package manager for any JavaScript project.",
   "author": "Zach Olivare <https://github.com/0livare>",
   "license": "ISC",
   "repository": "https://github.com/0livare/easy-install",
   "bin": {
-    "in": "bin/in"
+    "in": "src/in.ts"
   },
   "files": [
-    "bin"
+    "src"
   ],
   "scripts": {
-    "in": "bun src/index.ts",
-    "build": "bun build src/index.ts --compile --outfile=bin/in",
-    "postbuild": "bun link",
-    "watch": "bun run build --watch",
+    "in": "bun src/in.ts",
+    "link": "bun link",
     "lint": "tsc && prettier --check ."
   },
   "dependencies": {

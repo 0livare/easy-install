@@ -2,25 +2,25 @@ import {objectKeys} from './utils'
 
 const packageManagerDefs = {
   npm: {
-    lockFileName: 'package-lock.json',
+    lockFileNames: ['package-lock.json'],
     installDepsCmd: 'npm install',
     addNewDepCmd: 'npm install',
     devDepFlag: '--save-dev',
   },
   yarn: {
-    lockFileName: 'yarn.lock',
+    lockFileNames: ['yarn.lock'],
     installDepsCmd: 'yarn install',
     addNewDepCmd: 'yarn add',
     devDepFlag: '--dev',
   },
   pnpm: {
-    lockFileName: 'pnpm-lock.yaml',
+    lockFileNames: ['pnpm-lock.yaml'],
     installDepsCmd: 'pnpm install',
     addNewDepCmd: 'pnpm add',
     devDepFlag: '--save-dev',
   },
   bun: {
-    lockFileName: 'bun.lockb',
+    lockFileNames: ['bun.lock', 'bun.lockb'],
     installDepsCmd: 'bun install',
     addNewDepCmd: 'bun add',
     devDepFlag: '--dev',
@@ -37,7 +37,7 @@ export const packageManagerDefList: PackageManagerDefinition[] = objectKeys(
 export type PackageManagerName = keyof typeof packageManagerDefs
 export type PackageManagerDefinition = {
   name: PackageManagerName
-  lockFileName: string
+  lockFileNames: string[]
   installDepsCmd: string
   addNewDepCmd: string
   devDepFlag: string

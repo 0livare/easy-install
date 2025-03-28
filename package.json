@@ -1,6 +1,6 @@
 {
   "name": "easy-install",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Single command to install dependencies with the correct package manager for any JavaScript project.",
   "author": "Zach Olivare <https://github.com/0livare>",
   "license": "ISC",
@@ -36,5 +36,6 @@
     "yarn",
     "pnpm",
     "bun"
-  ]
+  ],
+  "packageManager": "bun@1.2.7"
 }

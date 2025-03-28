@@ -69,13 +69,15 @@ async function determinePackageManager(
   packageJsonPath: string,
 ): Promise<ManagerWithLockFile | undefined> {
   for (const manager of packageManagerDefList) {
-    const lockFilePath = path.join(
-      path.dirname(packageJsonPath),
-      manager.lockFileName,
-    )
+    for (const lockFileName of manager.lockFileNames) {
+      const lockFilePath = path.join(
+        path.dirname(packageJsonPath),
+        lockFileName,
+      )
 
-    if (await Bun.file(lockFilePath).exists()) {
-      return {...manager, lockFilePath}
+      if (await Bun.file(lockFilePath).exists()) {
+        return {...manager, lockFilePath}
+      }
     }
   }
 }

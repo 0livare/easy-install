@@ -10,6 +10,8 @@ export function parseCliArgs() {
         dependencies: {type: 'string'},
         dev: {type: 'boolean', short: 'd'},
         'save-dev': {type: 'boolean', short: 'D'},
+        'frozen-lockfile': {type: 'boolean', short: 'z'},
+        frozen: {type: 'boolean'},
         help: {type: 'boolean', short: 'h'},
         version: {type: 'boolean', short: 'v'},
       },

@@ -31,14 +31,26 @@ async function main() {
     chalk.gray(`Installing with ${manager.name}: ${manager.lockFilePath}`),
   )
 
-  if (!cli.dependencies) {
-    await shell(manager.installDepsCmd)
-    process.exit(0)
+  let cmd = ''
+  if (cli['frozen-lockfile'] || cli['frozen']) {
+    cmd = manager.installFrozenDepsCmd
+
+    if (cli.dependencies) {
+      console.error(
+        chalk.red('Cannot install new dependencies with frozen lockfile'),
+      )
+      process.exit(1)
+    }
+  } else {
+    if (cli.dependencies) {
+      cmd = manager.addNewDepCmd
+      if (cli.dev || cli['save-dev']) cmd += ' ' + manager.devDepFlag
+      if (cli.dependencies) cmd += ' ' + cli.dependencies
+    } else {
+      cmd = manager.installDepsCmd
+    }
   }
 
-  let cmd = manager.addNewDepCmd
-  if (cli.dev || cli['save-dev']) cmd += ' ' + manager.devDepFlag
-  cmd += ' ' + cli.dependencies
   await shell(cmd)
 }
 

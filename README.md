@@ -22,9 +22,10 @@ in [flags] [...<pkg>]
 
 ```bash
 Flags:
-  -d, -D, --dev, --save-dev  Install pkg as a development dependency
-  -v, --version              Print version number
-  -h, --help                 Print help information
+  -d, -D, --dev, --save-dev        Install pkg as a development dependency
+  -z, --frozen, --frozen-lockfile  Disallow changes to lockfile
+  -v, --version                    Print version number
+  -h, --help                       Print help information
 ```
 
 ## Examples
@@ -73,12 +74,12 @@ Easy Install determines the correct package manager based on the lock file prese
 
 ### Supported package managers
 
-| Package Manager | Lock File           |
-| --------------- | ------------------- |
-| npm             | `package-lock.json` |
-| yarn            | `yarn.lock`         |
-| pnpm            | `pnpm-lock.yaml`    |
-| bun             | `bun.lockb`         |
+| Package Manager | Lock File               |
+| --------------- | ----------------------- |
+| npm             | `package-lock.json`     |
+| yarn            | `yarn.lock`             |
+| pnpm            | `pnpm-lock.yaml`        |
+| bun             | `bun.lock`, `bun.lockb` |
 
 ## Development
 
@@ -96,8 +97,8 @@ To run:
 bun in
 ```
 
-To build a binary:
+To link the global `in` command to this local development version:
 
 ```bash
-bun run build
+bun link
 ```
